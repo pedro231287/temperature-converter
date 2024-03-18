@@ -35,37 +35,27 @@ function App() {
     event.preventDefault();
     const select = document.getElementById("escala");
     const escala = select.value;
+    const input = document.getElementById("temperatura");
+    const temperatura = input.value;
 
-    if (escala === null || escala === undefined){
-      document.getElementById("escala1").textContent = " ";
-      document.getElementById("temp1").textContent = " ";
-      document.getElementById("escala2").textContent = " ";
-      document.getElementById("temp2").textContent = " ";
+    if (!escala || !temperatura || escala === "vazio") {
       alert("Por favor preencha todos os campos");
+      return;
     }
     else {
       if (escala === 'C'){
-        const input = document.getElementById("temperatura");
-        const temperatura = input.value;
-
         document.getElementById("escala1").textContent = "Fahrenheit";
         document.getElementById("temp1").textContent = temperatura*1.8 + 32 + "°F";
         document.getElementById("escala2").textContent = "Kelvin";
         document.getElementById("temp2").textContent = temperatura*1 + 273 + "K";
       }
       else if (escala === 'F'){
-        const input = document.getElementById("temperatura");
-        const temperatura = input.value;
-
         document.getElementById("escala1").textContent = "Celsius";
         document.getElementById("temp1").textContent = (temperatura - 32)/1.8 + "°C";
         document.getElementById("escala2").textContent = "Kelvin";
         document.getElementById("temp2").textContent = ((temperatura - 32)/1.8) + 273 + "K";
       }
       else if (escala === 'K'){
-        const input = document.getElementById("temperatura");
-        const temperatura = input.value;
-
         document.getElementById("escala1").textContent = "Fahrenheit";
         document.getElementById("temp1").textContent = (temperatura - 273)*1.8 + 32 + "°F";
         document.getElementById("escala2").textContent = "Celsius";
