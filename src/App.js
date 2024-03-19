@@ -1,67 +1,105 @@
-//app.js
-import React from "react";
-import "./App.css";
+import React, {Component} from "react";
+import './App.css';
 
-function App() {
-  return (
-    <div id="container">
+class App extends Component {
 
-      <form>
-      <label>Escala</label><br/>
-      <select id="escala" required>
-        <option value="vazio">-</option>
-        <option value="C">Celsius</option>
-        <option value="F">Fahrenheit</option>
-        <option value="K">Kelvin</option>
-	    </select><br/>
-      <label>Temperatura</label><br/>
-      <input id="temperatura" type="number" step={0.01} required></input><br/>
-      <button type="submit" onClick={Converter} required>Converter</button>
-      </form>
+  constructor(props) {
+    super(props);
+      this.state = { 
+          escala: "",
+          temperatura: "",
+          escala1: "",
+          temp1: "",
+          escala2: "",
+          temp2: ""
+          }
+  }
 
-      <hr/>
+  changeInput = (event) => {
+    this.setState({
+      escala: document.getElementById("escala").value,
+      temperatura: document.getElementById("temperatura").value
+      });
+  }
 
-      <div id="container2">
-        <label id="escala1"></label><br/>
-        <output id="temp1"></output><br/>
-        <label id="escala2"></label><br/>
-        <output id="temp2"></output><br/>
+  converter = (event) => {
+      event.preventDefault(); 
+      let escala = this.state.escala, temperatura = this.state.temperatura, escala1, temp1, escala2, temp2;
+
+      if (!escala || !temperatura) {
+          alert("Por favor, preencha todos os campos");
+          return;
+      }
+
+      if (escala === "C") {
+          temp1 = (parseFloat(temperatura) * 1.8 + 32).toFixed(2); // Celsius para Fahrenheit
+          temp2 = (parseFloat(temperatura) + 273.15).toFixed(2);   // Celsius para Kelvin
+          escala1 = "Fahrenheit";
+          escala2 = "Kelvin";
+      } 
+      else if (escala === "F") {
+          temp1 = ((parseFloat(temperatura) - 32) / 1.8).toFixed(2); // Fahrenheit para Celsius
+          temp2 = ((parseFloat(temperatura) - 32) / 1.8 + 273.15).toFixed(2); // Fahrenheit para Kelvin
+          escala1 = "Celsius";
+          escala2 = "Kelvin";
+      } 
+      else if (escala === "K") {
+          temp1 = ((parseFloat(temperatura) - 273.15) * 1.8 + 32).toFixed(2); // Kelvin para Fahrenheit
+          temp2 = (parseFloat(temperatura) - 273.15).toFixed(2); // Kelvin para Celsius
+          escala1 = "Fahrenheit";
+          escala2 = "Celsius";
+      }
+
+      if (escala2 === "Kelvin") {
+          this.setState({
+            escala1,
+            temp1: `${temp1}°${escala1.charAt(0)}`,
+            escala2,
+            temp2: `${temp2}${escala2.charAt(0)}` 
+          });
+      }
+      else {
+          this.setState({
+            escala1,
+            temp1: `${temp1}°${escala1.charAt(0)}`,
+            escala2,
+            temp2: `${temp2}°${escala2.charAt(0)}` 
+          });
+      }
+
+      
+    
+  };
+
+  render() {
+
+    return (
+      <div id="container">
+
+          <form onSubmit={this.converter}>
+              <label>Escala</label><br/>
+                  <select id="escala" value={this.state.escala} onChange={this.changeInput} required>
+                      <option value="vazio">-</option>
+                      <option value="C">Celsius</option>
+                      <option value="F">Fahrenheit</option>
+                      <option value="K">Kelvin</option>
+                  </select><br/>
+              <label>Temperatura</label><br/>
+                  <input id="temperatura" type="number" step={0.01} value={this.state.temperatura} onChange={this.changeInput} required></input><br/>
+              <button type="submit">Converter</button>
+          </form>
+
+          <hr/>
+
+          <div id="container2">
+              <label id="escala1">{this.state.escala1}</label><br/>
+                  <output id="temp1">{this.state.temp1}</output><br/>
+              <label id="escala2">{this.state.escala2}</label><br/>
+                  <output id="temp2">{this.state.temp2}</output><br/>
+          </div>
+
       </div>
-
-    </div>
-  );
-
-  function Converter(event) {
-    event.preventDefault();
-    const select = document.getElementById("escala");
-    const escala = select.value;
-    const input = document.getElementById("temperatura");
-    const temperatura = input.value;
-
-    if (!escala || !temperatura || escala === "vazio") {
-      alert("Por favor preencha todos os campos");
-      return;
-    }
-    else {
-      if (escala === 'C'){
-        document.getElementById("escala1").textContent = "Fahrenheit";
-        document.getElementById("temp1").textContent = temperatura*1.8 + 32 + "°F";
-        document.getElementById("escala2").textContent = "Kelvin";
-        document.getElementById("temp2").textContent = temperatura*1 + 273 + "K";
-      }
-      else if (escala === 'F'){
-        document.getElementById("escala1").textContent = "Celsius";
-        document.getElementById("temp1").textContent = (temperatura - 32)/1.8 + "°C";
-        document.getElementById("escala2").textContent = "Kelvin";
-        document.getElementById("temp2").textContent = ((temperatura - 32)/1.8) + 273 + "K";
-      }
-      else if (escala === 'K'){
-        document.getElementById("escala1").textContent = "Fahrenheit";
-        document.getElementById("temp1").textContent = (temperatura - 273)*1.8 + 32 + "°F";
-        document.getElementById("escala2").textContent = "Celsius";
-        document.getElementById("temp2").textContent = temperatura - 273 + "°C";
-      }
-    }
+    );
 
   }
 
